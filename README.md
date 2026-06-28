@@ -42,7 +42,7 @@ A complete Infrastructure as Code (IaC) project that provisions an Ubuntu 20.04 
 ```
 TF-EC2-NGINX/
     ├── bootstrap/
-    │   ├── main.tf           # Creates S3 bucket + DynamoDB lock table
+    ├── main.tf           # Creates S3 bucket + DynamoDB lock table
     │   └── variables.tf      # Bootstrap-specific variables
     ├── backend.tf            # S3 remote backend + provider config
     ├── main.tf               # EC2, security group, key pair resources
@@ -52,6 +52,7 @@ TF-EC2-NGINX/
     ├── user_data.sh          # EC2 boot script — installs Nginx + custom HTML
     ├── init.sh               # Single-command deploy
     └── destroy.sh            # Single-command teardown
+    ├── screenshots/              # Add your screenshots here
     ├── .gitignore
     └── README.md
 ```
@@ -95,8 +96,9 @@ This creates:
 - `~/.ssh/id_rsa` — private key *(never share or commit this)*
 - `~/.ssh/id_rsa.pub` — public key *(Terraform uploads this to AWS automatically)*
 
-📸 **Screenshot 1 — SSH key generation output**
-> Run the command above in your terminal and take a screenshot showing the key fingerprint and randomart image.
+**Screenshot 1 — SSH key generation output**
+![SSH key generation output](./screenshots/ssh-key-generation.png)
+> Run the command above in your terminal and screenshot the key fingerprint and randomart image.
 
 ```
 Expected output:
@@ -143,11 +145,13 @@ STEP 2 → terraform init    connects main module to S3 backend
 STEP 3 → terraform apply   deploys EC2 instance with Nginx
 ```
 
-📸 **Screenshot 2 — `terraform init` success**
-> Take a screenshot showing `Terraform has been successfully initialized!`
+**Screenshot 2 — `terraform init` success**
+![Terraform successfully initialized](./screenshots/terraform-init.png)
+> Screenshot showing `Terraform has been successfully initialized!`
 
-📸 **Screenshot 3 — `terraform apply` complete**
-> Take a screenshot of the apply output showing all resources created and the outputs block:
+**Screenshot 3 — `terraform apply` complete**
+![Terraform apply complete](./screenshots/terraform-apply.png)
+> Screenshot of the apply output showing all resources created and the outputs block:
 
 ```
 Apply complete! Resources: 5 added, 0 changed, 0 destroyed.
@@ -165,8 +169,9 @@ ssh_command        = "ssh -i ~/.ssh/id_rsa ubuntu@x.x.x.x"
 
 Open the `nginx_url` from the outputs in your browser.
 
-📸 **Screenshot 4 — Nginx running in browser**
-> Open `http://<instance_public_ip>` in your browser and take a screenshot showing:
+**Screenshot 4 — Nginx running in browser**
+![Nginx running in browser](./screenshots/nginx-running-browser.png)
+> Open `http://<instance_public_ip>` in your browser and screenshot the page showing:
 
 ```
 Welcome to the Terraform-managed Nginx Server on Ubuntu
@@ -181,8 +186,9 @@ Deployed via Terraform.
 curl http://<instance_public_ip>
 ```
 
-📸 **Screenshot 5 — curl response**
-> Take a screenshot of the terminal showing the full HTML response from `curl`.
+**Screenshot 5 — curl response**
+![curl response](./screenshots/curl-response.png)
+> Screenshot of the terminal showing the full HTML response from `curl`.
 
 ---
 
@@ -198,8 +204,9 @@ Once inside, verify Nginx is active:
 systemctl status nginx
 ```
 
-📸 **Screenshot 6 — SSH session + Nginx status**
-> Take a screenshot showing:
+**Screenshot 6 — SSH session + Nginx status**
+![SSH session and Nginx status](./screenshots/ssh-nginx-status.png)
+> Screenshot showing:
 > - Successful SSH login (`ubuntu@ip-xxx-xxx-xxx-xxx`)
 > - `systemctl status nginx` output with `active (running)` in green
 
@@ -207,19 +214,23 @@ systemctl status nginx
 
 ### Step 7 — AWS Console verification
 
-Log into the [AWS Console](https://console.aws.amazon.com) and verify:
+Log into the [AWS Console](https://console.aws.amazon.com) and verify each resource:
 
-📸 **Screenshot 7 — EC2 instance in AWS Console**
-> Navigate to **EC2 → Instances** and take a screenshot showing the instance in `Running` state with the correct public IP.
+**Screenshot 7 — EC2 instance in AWS Console**
+![EC2 instance in AWS Console](./screenshots/ec2-instance-console.png)
+> Navigate to **EC2 → Instances** and screenshot the instance in `Running` state with the correct public IP.
 
-📸 **Screenshot 8 — Security Group rules**
-> Navigate to **EC2 → Security Groups → nginx-sg → Inbound rules** and take a screenshot showing port 22 and port 80 rules.
+**Screenshot 8 — Security Group rules**
+![Security Group inbound rules](./screenshots/security-group-rules.png)
+> Navigate to **EC2 → Security Groups → nginx-sg → Inbound rules** and screenshot port 22 and port 80 rules.
 
-📸 **Screenshot 9 — S3 bucket in AWS Console**
-> Navigate to **S3** and take a screenshot showing `tf-nginx-state-bucket` with the `nginx-ec2/terraform.tfstate` object inside.
+**Screenshot 9 — S3 bucket in AWS Console**
+![S3 bucket with state file](./screenshots/s3-bucket-console.png)
+> Navigate to **S3** and screenshot `tf-nginx-state-bucket` with the `nginx-ec2/terraform.tfstate` object inside.
 
-📸 **Screenshot 10 — DynamoDB table in AWS Console**
-> Navigate to **DynamoDB → Tables** and take a screenshot showing `tf-nginx-lock-table` with `LockID` as the partition key.
+**Screenshot 10 — DynamoDB table in AWS Console**
+![DynamoDB lock table](./screenshots/dynamodb-table-console.png)
+> Navigate to **DynamoDB → Tables** and screenshot `tf-nginx-lock-table` with `LockID` as the partition key.
 
 ---
 
@@ -235,8 +246,9 @@ STEP 2 → terraform destroy             removes EC2, security group, key pair
 STEP 3 → bootstrap/ destroy            removes S3 bucket + DynamoDB table
 ```
 
-📸 **Screenshot 11 — `terraform destroy` complete**
-> Take a screenshot showing `Destroy complete! Resources: X destroyed.`
+**Screenshot 11 — `terraform destroy` complete**
+![Terraform destroy complete](./screenshots/terraform-destroy.png)
+> Screenshot showing `Destroy complete! Resources: X destroyed.`
 
 ---
 
@@ -298,24 +310,16 @@ HTML
 
 ---
 
-## Marking Scheme Coverage
-
-| Task | Marks | File | Status |
-|---|---|---|---|
-| AWS Provider & Region Setup | 5 | `backend.tf` | ✅ Provider block with `var.aws_region` |
-| EC2 Instance (Ubuntu, t2.micro) | 10 | `main.tf` | ✅ Dynamic AMI data source + t2.micro |
-| Security Group (HTTP + SSH) | 10 | `main.tf` | ✅ Ingress rules for port 22 and 80 |
-| user_data: Nginx + Custom HTML | 10 | `user_data.sh` | ✅ Rendered via `templatefile()` |
-| Output Public IP | 5 | `outputs.tf` | ✅ `instance_public_ip` + `nginx_url` |
-| terraform destroy | 5 | `destroy.sh` | ✅ Full teardown in correct order |
-| README + Documentation | 5 | `README.md` | ✅ This file with screenshots |
-| **Total** | **50** | | |
-
----
-
 ## Important Notes
 
 - All resources are tagged with `Name`, `Environment = "assignment"`, and `ManagedBy = "Terraform"`
 - No separate VPC, subnet, or internet gateway is created (as per assignment requirements)
 - `*.tfstate`, `.terraform/`, and `*.pem` files are excluded from Git via `.gitignore`
 - Never commit `~/.ssh/id_rsa` (private key) to version control
+- Add your screenshots to the `screenshots/` folder before pushing to Git
+
+---
+
+> **Assignment:** EC2 Nginx Deployment with Terraform
+> **Author:** Avinash Sain  
+> **GitHub:** https://github.com/Avinashsain/tf-ec2-nginx
