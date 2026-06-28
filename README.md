@@ -41,20 +41,19 @@ A complete Infrastructure as Code (IaC) project that provisions an Ubuntu 20.04 
 
 ```
 TF-EC2-NGINX/
-├── terraform/
-│   ├── bootstrap/
-│   │   ├── main.tf           # Creates S3 bucket + DynamoDB lock table
-│   │   └── variables.tf      # Bootstrap-specific variables
-│   ├── backend.tf            # S3 remote backend + provider config
-│   ├── main.tf               # EC2, security group, key pair resources
-│   ├── variables.tf          # All input variables
-│   ├── outputs.tf            # Public IP, SSH command, Nginx URL
-│   ├── terraform.tfvars      # Variable values (edit before deploying)
-│   ├── user_data.sh          # EC2 boot script — installs Nginx + custom HTML
-│   ├── init.sh               # Single-command deploy
-│   └── destroy.sh            # Single-command teardown
-├── .gitignore
-└── README.md
+    ├── bootstrap/
+    │   ├── main.tf           # Creates S3 bucket + DynamoDB lock table
+    │   └── variables.tf      # Bootstrap-specific variables
+    ├── backend.tf            # S3 remote backend + provider config
+    ├── main.tf               # EC2, security group, key pair resources
+    ├── variables.tf          # All input variables
+    ├── outputs.tf            # Public IP, SSH command, Nginx URL
+    ├── terraform.tfvars      # Variable values (edit before deploying)
+    ├── user_data.sh          # EC2 boot script — installs Nginx + custom HTML
+    ├── init.sh               # Single-command deploy
+    └── destroy.sh            # Single-command teardown
+    ├── .gitignore
+    └── README.md
 ```
 
 ---
